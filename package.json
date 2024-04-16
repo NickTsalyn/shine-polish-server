@@ -1,0 +1,30 @@
+{
+  "name": "shine-polish-server",
+  "version": "1.0.0",
+  "description": "The Shine-polish server APIs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node dist/server/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon dist/server/server.js",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "lint": "eslint **/*.js",
+    "lint:fix": "eslint --fix **/*.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "nodemon": "^3.1.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
