@@ -13,7 +13,7 @@ export class AuthController {
 
   @Post("signin")
   async signin(@Body() dto: SignInDto) {
-    return { message: "User successfully logged in" };
+    return (await this.authService.signin(dto)).accessToken;
   }
 
   @Get("refresh")
