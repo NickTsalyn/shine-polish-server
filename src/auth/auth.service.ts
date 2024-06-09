@@ -72,7 +72,15 @@ export class AuthService {
     });
     const { accessToken } = await this.generateAccessToken(newUser);
 
-    return { accessToken, user: newUser };
+    return {
+      token: accessToken,
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        username: newUser.username,
+        roles: newUser.roles,
+      },
+    };
   }
 
   async signin(dto: SignInDto): Promise<Tokens> {
