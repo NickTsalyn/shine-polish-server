@@ -13,7 +13,7 @@ export class AuthController {
 
   @Post("signin")
   async signin(@Body() dto: SignInDto) {
-    return (await this.authService.signin(dto)).accessToken;
+    return this.authService.signin(dto);
   }
 
   @Get("refresh")

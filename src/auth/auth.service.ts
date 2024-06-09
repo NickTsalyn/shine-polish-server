@@ -83,11 +83,19 @@ export class AuthService {
     };
   }
 
-  async signin(dto: SignInDto): Promise<Tokens> {
+  async signin(dto: SignInDto) {
     const user: User = await this.validateUser(dto);
     const { accessToken } = await this.generateAccessToken(user);
-    const refreshToken = await this.generateRefreshToken(user._id);
+    // const refreshToken: Token = await this.generateRefreshToken(user._id);
 
-    return { accessToken, refreshToken };
+    return {
+      token: accessToken,
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        roles: user.roles,
+      },
+    };
   }
 }
