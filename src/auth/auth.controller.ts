@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { SignInDto, SignUpDto } from "./dto";
+import { SessionInfoDto, SignInDto, SignUpDto } from "./dto";
+import { JwtAuthGuard } from "./auth.guard";
+import { SessionInfo } from "src/decorators";
 
 @Controller("auth")
 export class AuthController {
@@ -16,6 +18,12 @@ export class AuthController {
     return this.authService.signin(dto);
   }
 
-  @Get("refresh")
-  async refreshTokens() {}
+  @Get("session")
+  @UseGuards(JwtAuthGuard)
+  async getSessionInfo(@SessionInfo() session: SessionInfoDto) {
+    return session;
+  }
+
+  @Post("signout")
+  async signout() {}
 }
