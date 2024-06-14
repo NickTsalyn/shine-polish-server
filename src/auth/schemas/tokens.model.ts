@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Date } from "mongoose";
+import mongoose from "mongoose";
 
 @Schema({ versionKey: false })
 export class Token {

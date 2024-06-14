@@ -40,11 +40,10 @@ export class AuthService {
       ...dto,
       password: hashPassword,
     });
-    const { accessToken, refreshToken } = await this.tokensService.generateTokens(newUser);
+    const { accessToken } = await this.tokensService.generateTokens(newUser);
 
     return {
       accessToken,
-      refreshToken: refreshToken.token,
       user: {
         id: newUser._id,
         email: newUser.email,
@@ -60,7 +59,7 @@ export class AuthService {
 
     return {
       accessToken,
-      refreshToken: refreshToken.token,
+      refreshToken,
       user: {
         id: user._id,
         email: user.email,
