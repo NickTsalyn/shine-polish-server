@@ -1,6 +1,6 @@
 import { Token } from "src/auth/schemas/tokens.model";
 
-export interface Tokens {
+export interface ITokens {
   accessToken: string;
   refreshToken: Token;
 }

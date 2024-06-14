@@ -3,26 +3,19 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "src/users/users.service";
 import { SignInDto, SignUpDto } from "./dto";
 import { AppError } from "src/helpers";
 import { PasswordService } from "./password.service";
 import { User } from "src/users/users.model";
-import { Tokens } from "src/interfaces";
-import { InjectModel } from "@nestjs/mongoose";
-import { Token } from "./schemas/tokens.model";
-import mongoose, { Model } from "mongoose";
-import { v4 } from "uuid";
-import { add } from "date-fns";
+import { TokensService } from "./tokens.service";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
-    private readonly jwtService: JwtService,
     private readonly passwordService: PasswordService,
-    @InjectModel(Token.name) private tokenRepository: Model<Token>
+    private readonly tokensService: TokensService
   ) {}
 
   private async validateUser(dto: SignInDto) {
@@ -38,29 +31,6 @@ export class AuthService {
     throw new UnauthorizedException({ message: AppError.WRONG_DATA });
   }
 
-  private async generateAccessToken(user: User) {
-    const payload = {
-      id: user._id,
-      email: user.email,
-      username: user.username,
-      roles: user.roles,
-    };
-
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
-  }
-
-  private async generateRefreshToken(
-    userId: mongoose.Types.ObjectId
-  ): Promise<Token> {
-    return this.tokenRepository.create({
-      token: v4(),
-      exp: add(new Date(), { months: 1 }),
-      userId,
-    });
-  }
-
   async signup(dto: SignUpDto) {
     const isExistUser: User = await this.userService.findOneByEmail(dto.email);
     if (isExistUser) throw new ConflictException(AppError.USER_EXIST);
@@ -70,10 +40,10 @@ export class AuthService {
       ...dto,
       password: hashPassword,
     });
-    const { accessToken } = await this.generateAccessToken(newUser);
+    const { accessToken } = await this.tokensService.generateTokens(newUser);
 
     return {
-      token: accessToken,
+      accessToken,
       user: {
         id: newUser._id,
         email: newUser.email,
@@ -85,11 +55,11 @@ export class AuthService {
 
   async signin(dto: SignInDto) {
     const user: User = await this.validateUser(dto);
-    const { accessToken } = await this.generateAccessToken(user);
-    // const refreshToken: Token = await this.generateRefreshToken(user._id);
+    const { accessToken, refreshToken } = await this.tokensService.generateTokens(user);
 
     return {
-      token: accessToken,
+      accessToken,
+      refreshToken,
       user: {
         id: user._id,
         email: user.email,
