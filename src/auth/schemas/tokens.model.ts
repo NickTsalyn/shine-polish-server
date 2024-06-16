@@ -11,6 +11,9 @@ export class Token {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId })
   userId: mongoose.Types.ObjectId;
+
+  @Prop()
+  userAgent: string;
 }
 
 export const TokenSchema = SchemaFactory.createForClass(Token);

@@ -31,7 +31,7 @@ export class AuthService {
     throw new UnauthorizedException({ message: AppError.WRONG_DATA });
   }
 
-  async signup(dto: SignUpDto) {
+  async signup(dto: SignUpDto, agent: string) {
     const isExistUser: User = await this.userService.findOneByEmail(dto.email);
     if (isExistUser) throw new ConflictException(AppError.USER_EXIST);
 
@@ -40,7 +40,7 @@ export class AuthService {
       ...dto,
       password: hashPassword,
     });
-    const { accessToken } = await this.tokensService.generateTokens(newUser);
+    const { accessToken } = await this.tokensService.generateTokens(newUser, agent);
 
     return {
       accessToken,
@@ -53,9 +53,9 @@ export class AuthService {
     };
   }
 
-  async signin(dto: SignInDto) {
+  async signin(dto: SignInDto, agent: string) {
     const user: User = await this.validateUser(dto);
-    const { accessToken, refreshToken } = await this.tokensService.generateTokens(user);
+    const { accessToken, refreshToken } = await this.tokensService.generateTokens(user, agent);
 
     return {
       accessToken,

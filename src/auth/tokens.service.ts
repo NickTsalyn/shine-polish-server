@@ -1,11 +1,15 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
-import { Token } from "./schemas/tokens.model";
 import mongoose, { Model } from "mongoose";
 import { v4 } from "uuid";
 import { add } from "date-fns";
 import { User } from "src/users/users.model";
+import { Token } from "./schemas/tokens.model";
 import { ITokens } from "src/helpers/interfaces";
 import { AppError } from "src/helpers";
 
@@ -29,31 +33,62 @@ export class TokensService {
   }
 
   private async generateRefreshToken(
-    userId: mongoose.Types.ObjectId
+    userId: mongoose.Types.ObjectId,
+    agent: string
   ): Promise<Token> {
-    return this.tokenRepository.create({
-      token: v4(),
-      exp: add(new Date(), { months: 1 }),
+    const token = await this.tokenRepository.findOne({
       userId,
+      userAgent: agent,
     });
-  }
 
-  async generateTokens(user: User): Promise<ITokens> {
+    if (!token) {
+      return this.tokenRepository.create({
+        token: v4(),
+        exp: add(new Date(), { months: 1 }),
+        userId,
+        userAgent: agent,
+      });
+    }
+
+    return this.tokenRepository.findOneAndUpdate(
+      { token: token.token },
+      {
+        token: v4(),
+        exp: add(new Date(), { months: 1 }),
+      },
+      { new: true }
+    );
+  }
+  async generateTokens(user: User, agent: string): Promise<ITokens> {
     const accessToken = await this.generateAccessToken(user);
-    const refreshToken = await this.generateRefreshToken(user._id);
+    const refreshToken = await this.generateRefreshToken(user._id, agent);
 
     return { accessToken, refreshToken };
   }
 
-  async refreshTokens(refreshToken: string): Promise<ITokens> {
+  async refreshTokens(refreshToken: string, agent: string): Promise<ITokens> {
     const token = await this.tokenRepository.findOne({ token: refreshToken });
     if (!token) throw new UnauthorizedException();
-    
-    const user: User = await this.userRepository.findById({ _id: token.userId });
+
+    if (new Date(token.exp) < new Date()) {
+      await this.tokenRepository.deleteOne({ _id: token._id });
+      throw new UnauthorizedException(AppError.SESSION_EXPIRED);
+    }
+
+    await this.tokenRepository.findByIdAndUpdate(
+      { _id: token._id },
+      {
+        token: v4(),
+        exp: add(new Date(), { months: 1 }),
+      },
+      { new: true }
+    );
+
+    const user: User = await this.userRepository.findById({
+      _id: token.userId,
+    });
     if (!user) throw new BadRequestException(AppError.USER_NOT_FOUND);
 
-    await this.tokenRepository.findByIdAndDelete({ _id: token._id });
-    
-    return this.generateTokens(user);
+    return this.generateTokens(user, agent);
   }
 }
