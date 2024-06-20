@@ -17,7 +17,7 @@ export class AuthController {
     private readonly tokensService: TokensService
   ) {}
 
-  static REFRESH_TOKEN = "refreshToken";
+  private static readonly REFRESH_TOKEN = "refreshToken";
 
   @Post("signup")
   async signup(
