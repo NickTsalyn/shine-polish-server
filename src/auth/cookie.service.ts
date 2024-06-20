@@ -5,7 +5,7 @@ import { ITokens } from "src/helpers/interfaces";
 
 @Injectable()
 export class CookieService {
-  static REFRESH_TOKEN = "refreshToken";
+  private static readonly REFRESH_TOKEN = "refreshToken";
 
   async setRefreshToken(tokens: ITokens, res: Response): Promise<void> {
     if (!tokens) throw new UnauthorizedException();

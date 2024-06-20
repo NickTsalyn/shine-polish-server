@@ -3,7 +3,7 @@ import { SessionInfoDto, SignInDto, SignUpDto } from "./dto";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./auth.guard";
 import { TokensService } from "./tokens.service";
-import { Cookie, SessionInfo } from "src/decorators";
+import { Cookie, SessionInfo, UserAgent } from "src/decorators";
 import { CookieService } from "./cookie.service";
 import { Response } from "express";
 import { AppError } from "src/helpers";
@@ -17,13 +17,14 @@ export class AuthController {
     private readonly tokensService: TokensService
   ) {}
 
-  static REFRESH_TOKEN = "refreshToken";
+  private static readonly REFRESH_TOKEN = "refreshToken";
 
   @Post("signup")
   async signup(
-    @Body() dto: SignUpDto
+    @Body() dto: SignUpDto,
+    @UserAgent() agent: string,
   ): Promise<{ accessToken: string; user: IUser}> {
-    const { accessToken, user } = await this.authService.signup(dto);
+    const { accessToken, user } = await this.authService.signup(dto, agent);
     if (!accessToken || !user) throw new BadRequestException(AppError.FAILED_SIGNUP);
 
     return { accessToken, user };
@@ -32,9 +33,11 @@ export class AuthController {
   @Post("signin")
   async signin(
     @Body() dto: SignInDto,
-    @Res({ passthrough: true }) res: Response
-  ): Promise<{ accessToken: string; user: IUser}> {
-    const { accessToken, refreshToken, user } = await this.authService.signin(dto);
+    @Res({ passthrough: true }) res: Response,
+    @UserAgent() agent: string,
+  ): Promise<{ accessToken: string; user: IUser}> {  
+    const { accessToken, refreshToken, user } = await this.authService.signin(dto, agent);
+
     if (!accessToken || !refreshToken || !user) throw new BadRequestException(AppError.FAILED_SIGNIN);
 
     await this.cookieService.setRefreshToken({ accessToken, refreshToken }, res);
@@ -47,13 +50,14 @@ export class AuthController {
   async getSessionInfo(
     @SessionInfo() session: SessionInfoDto,
     @Cookie(AuthController.REFRESH_TOKEN) refreshToken: string, 
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
+    @UserAgent() agent: string,
   ): Promise<{ accessToken: string; session: SessionInfoDto}> {
     if (!refreshToken) throw new UnauthorizedException(AppError.UNAUTHORIZED);
-
-    const tokens = await this.tokensService.refreshTokens(refreshToken);
+    
+    const tokens = await this.tokensService.refreshTokens(refreshToken, agent);
     if (!tokens) throw new UnauthorizedException(AppError.FAILED_REFRESH);
-
+    
     await this.cookieService.setRefreshToken(tokens, res);
 
     return {accessToken: tokens.accessToken, session};
