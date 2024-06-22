@@ -10,10 +10,12 @@ import { Token, TokenSchema } from "./schemas/tokens.model";
 import { TokensService } from "./tokens.service";
 import { CookieService } from "./cookie.service";
 import { User, UserSchema } from "src/users/users.model";
+import { STRATEGIES } from "./strategies";
+import { GUARDS } from "./guards";
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, PasswordService, TokensService, CookieService],
+  providers: [AuthService, PasswordService, TokensService, CookieService, ...STRATEGIES, ...GUARDS],
   imports: [
     UsersModule,
     JwtModule.registerAsync(options()),

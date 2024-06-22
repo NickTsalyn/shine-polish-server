@@ -1,13 +1,13 @@
 import { BadRequestException, Body, Controller, Get, Post, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { SessionInfoDto, SignInDto, SignUpDto } from "./dto";
 import { AuthService } from "./auth.service";
-import { JwtAuthGuard } from "./auth.guard";
 import { TokensService } from "./tokens.service";
 import { Cookie, SessionInfo, UserAgent } from "src/decorators";
 import { CookieService } from "./cookie.service";
 import { Response } from "express";
 import { AppError } from "src/helpers";
 import { IUser } from "src/helpers/interfaces";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 
 @Controller("auth")
 export class AuthController {

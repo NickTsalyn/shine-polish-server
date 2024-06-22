@@ -1,5 +1,10 @@
-import { ExecutionContext, createParamDecorator } from "@nestjs/common";
+import { ExecutionContext } from '@nestjs/common';
+import { createParamDecorator } from '@nestjs/common';
+import { IJwtPayload } from 'src/helpers/interfaces';
 
 export const SessionInfo = createParamDecorator(
-  (_, ctx: ExecutionContext) => ctx.switchToHttp().getRequest().session
+    (key: keyof IJwtPayload, ctx: ExecutionContext): IJwtPayload | Partial<IJwtPayload> => {
+        const request = ctx.switchToHttp().getRequest();
+        return key ? request.user[key] : request.user;
+    },
 );
