@@ -91,4 +91,8 @@ export class TokensService {
 
     return this.generateTokens(user, agent);
   }
+
+  async deleteRefreshToken(token: string) {
+    return await this.tokenRepository.findOneAndDelete({ token });
+  }
 }

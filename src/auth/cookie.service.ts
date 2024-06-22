@@ -1,5 +1,4 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { Response } from "express";
 import { ITokens } from "src/helpers/interfaces";
 
@@ -17,5 +16,9 @@ export class CookieService {
       secure: true,
       path: "/",
     });
+  }
+
+  async deleteRefreshToken(res: Response): Promise<void> {
+    res.clearCookie(CookieService.REFRESH_TOKEN);
   }
 }

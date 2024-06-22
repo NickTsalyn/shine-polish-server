@@ -1,13 +1,13 @@
-import { BadRequestException, Body, Controller, Get, Post, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpCode, Post, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { SessionInfoDto, SignInDto, SignUpDto } from "./dto";
 import { AuthService } from "./auth.service";
-import { JwtAuthGuard } from "./auth.guard";
 import { TokensService } from "./tokens.service";
 import { Cookie, SessionInfo, UserAgent } from "src/decorators";
 import { CookieService } from "./cookie.service";
 import { Response } from "express";
 import { AppError } from "src/helpers";
 import { IUser } from "src/helpers/interfaces";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 
 @Controller("auth")
 export class AuthController {
@@ -64,5 +64,15 @@ export class AuthController {
   }
 
   @Post("signout")
-  async signout() {}
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
+  async signout(
+    @Cookie(AuthController.REFRESH_TOKEN) refreshToken: string, 
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.tokensService.deleteRefreshToken(refreshToken);
+    await this.cookieService.deleteRefreshToken(res);
+
+    return;
+  }
 }
