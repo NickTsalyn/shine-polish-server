@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpCode, Post, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { SessionInfoDto, SignInDto, SignUpDto } from "./dto";
 import { AuthService } from "./auth.service";
 import { TokensService } from "./tokens.service";
@@ -64,5 +64,15 @@ export class AuthController {
   }
 
   @Post("signout")
-  async signout() {}
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
+  async signout(
+    @Cookie(AuthController.REFRESH_TOKEN) refreshToken: string, 
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.tokensService.deleteRefreshToken(refreshToken);
+    await this.cookieService.deleteRefreshToken(res);
+
+    return;
+  }
 }
