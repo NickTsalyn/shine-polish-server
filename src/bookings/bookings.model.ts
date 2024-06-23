@@ -4,6 +4,9 @@ import { UserRole } from "src/helpers/enums";
 
 @Schema({ versionKey: false, timestamps: true })
 export class Booking {
+  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
+  _id: mongoose.Types.ObjectId;
+  
   @Prop({ required: true })
   email: string;
 
