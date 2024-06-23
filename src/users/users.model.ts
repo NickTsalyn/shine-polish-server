@@ -1,10 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
-
-export enum UserRole {
-  USER = "USER",
-  ADMIN = "ADMIN",
-}
+import { UserRole } from "src/helpers/enums";
 
 @Schema({ versionKey: false, timestamps: true })
 export class User {

@@ -1,24 +1,25 @@
 import {
   IsArray,
+  IsDateString,
+  IsEmail,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  Min,
-} from 'class-validator';
+} from "class-validator";
 
 export class CreateBookingDto {
-  @IsString()
+  @IsEmail()
   @IsNotEmpty()
   email: string;
 
   @IsString()
   @IsNotEmpty()
-  firstName: string;
+  name: string;
 
   @IsString()
   @IsNotEmpty()
-  lastName: string;
+  surname: string;
 
   @IsString()
   @IsNotEmpty()
@@ -30,56 +31,62 @@ export class CreateBookingDto {
 
   @IsString()
   @IsNotEmpty()
+  areas: string;
+
+  @IsString()
+  @IsNotEmpty()
   city: string;
 
   @IsString()
-  @IsNotEmpty()
-  date: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  @Min(0)
-  bedrooms: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  @Min(0)
-  bathrooms: number;
-
-  @IsString()
-  @IsNotEmpty()
-  area: string;
-
-  @IsString()
   @IsOptional()
-  howOften?: string;
+  aptSuite?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  zipCode: string;
+
+  @IsDateString()
+  @IsNotEmpty()
+  selectedDate: Date;
+
+  @IsString()
+  @IsNotEmpty()
+  time: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  bedroom: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  bathroom: number;
 
   @IsArray()
-  @IsOptional()
   @IsString({ each: true })
+  @IsOptional()
   extras?: string[];
 
   @IsString()
-  @IsOptional()
-  additionalInfo1?: string;
+  @IsNotEmpty()
+  services: string;
 
   @IsString()
-  @IsOptional()
-  additionalInfo2?: string;
+  @IsNotEmpty()
+  frequency: string;
 
   @IsString()
-  @IsOptional()
-  specialInstructions?: string;
+  @IsNotEmpty()
+  aboutUs: string;
 
   @IsString()
-  @IsOptional()
-  question?: string;
+  @IsNotEmpty()
+  specialInstructions: string;
+
+  @IsString()
+  @IsNotEmpty()
+  homeAccess: string;
 
   @IsString()
   @IsOptional()
   discountCode?: string;
-
-  // @IsString()
-  // @IsNotEmpty()
-  // owner: string;
 }
