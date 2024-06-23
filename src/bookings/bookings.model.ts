@@ -1,15 +1,17 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import mongoose from "mongoose";
+import { UserRole } from "src/helpers/enums";
 
-@Schema({versionKey: false, timestamps: true})
+@Schema({ versionKey: false, timestamps: true })
 export class Booking {
-  @Prop({ unique: true, required: true })
+  @Prop({ required: true })
   email: string;
 
   @Prop({ required: true })
-  firstName: string;
+  name: string;
 
   @Prop({ required: true })
-  lastName: string;
+  surname: string;
 
   @Prop({ required: true })
   phone: string;
@@ -18,43 +20,55 @@ export class Booking {
   address: string;
 
   @Prop({ required: true })
+  areas: string;
+
+  @Prop({ required: true })
   city: string;
 
-  @Prop({ required: true })
-  date: string;
-
   @Prop()
-  bedrooms: number;
-
-  @Prop()
-  bathrooms: number;
+  aptSuite: string;
 
   @Prop({ required: true })
-  area: string;
+  zipCode: string;
 
-  @Prop()
-  howOften: string;
+  @Prop({ type: Date, required: true })
+  selectedDate: Date;
 
-  @Prop()
+  @Prop({ required: true })
+  time: string;
+
+  @Prop({ required: true })
+  bedroom: number;
+
+  @Prop({ required: true })
+  bathroom: number;
+
+  @Prop({ type: [String], default: [] })
   extras: string[];
 
-  @Prop()
-  additionalInfo1: string;
+  @Prop({ required: true })
+  services: string;
 
-  @Prop()
-  additionalInfo2: string;
+  @Prop({ required: true })
+  frequency: string;
 
-  @Prop()
+  @Prop({ required: true })
+  aboutUs: string;
+
+  @Prop({ required: true })
   specialInstructions: string;
 
-  @Prop()
-  question: string;
+  @Prop({ required: true })
+  homeAccess: string;
 
   @Prop()
   discountCode: string;
 
-  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  // owner: User;
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  owner: mongoose.Types.ObjectId;
+
+  @Prop({ type: [String], enum: UserRole, default: [UserRole.GUEST] })
+  roles: UserRole[];
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);
