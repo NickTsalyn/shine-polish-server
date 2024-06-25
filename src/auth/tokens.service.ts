@@ -11,7 +11,7 @@ import { add } from "date-fns";
 import { User } from "src/users/users.model";
 import { Token } from "./schemas/tokens.model";
 import { ITokens } from "src/common/interfaces";
-import { AppError } from "src/common/helpers";
+import { AppError } from "src/common/constants";
 
 @Injectable()
 export class TokensService {

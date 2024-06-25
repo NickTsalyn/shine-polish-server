@@ -5,7 +5,7 @@ import { TokensService } from "./tokens.service";
 import { Cookie, SessionInfo, UserAgent } from "src/common/decorators";
 import { CookieService } from "./cookie.service";
 import { Response } from "express";
-import { AppError } from "src/common/helpers";
+import { AppError } from "src/common/constants";
 import { IUser } from "src/common/interfaces";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 
