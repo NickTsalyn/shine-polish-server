@@ -2,11 +2,11 @@ import { BadRequestException, Body, Controller, Get, HttpCode, Post, Res, Unauth
 import { SessionInfoDto, SignInDto, SignUpDto } from "./dto";
 import { AuthService } from "./auth.service";
 import { TokensService } from "./tokens.service";
-import { Cookie, SessionInfo, UserAgent } from "src/decorators";
+import { Cookie, SessionInfo, UserAgent } from "src/common/decorators";
 import { CookieService } from "./cookie.service";
 import { Response } from "express";
-import { AppError } from "src/helpers";
-import { IUser } from "src/helpers/interfaces";
+import { AppError } from "src/common/helpers";
+import { IUser } from "src/common/interfaces";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 
 @Controller("auth")
