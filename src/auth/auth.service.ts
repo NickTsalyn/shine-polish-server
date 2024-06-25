@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { UsersService } from "src/users/users.service";
 import { SignInDto, SignUpDto } from "./dto";
-import { AppError } from "src/helpers";
+import { AppError } from "src/common/constants";
 import { PasswordService } from "./password.service";
 import { User } from "src/users/users.model";
 import { TokensService } from "./tokens.service";

@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { Response } from "express";
-import { ITokens } from "src/helpers/interfaces";
+import { ITokens } from "src/common/interfaces";
 
 @Injectable()
 export class CookieService {
