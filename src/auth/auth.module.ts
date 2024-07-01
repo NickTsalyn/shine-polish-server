@@ -3,7 +3,7 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { UsersModule } from "src/users/users.module";
 import { JwtModule } from "@nestjs/jwt";
-import { options } from "./config";
+import { options } from "../config";
 import { PasswordService } from "./password.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Token, TokenSchema } from "./schemas/tokens.model";
