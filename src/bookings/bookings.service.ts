@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { Booking } from "./bookings.model";
 import { IBooking } from "src/common/interfaces";
 import { CreateBookingDto } from "./dto/create-booking.dto";
@@ -36,8 +36,11 @@ export class BookingsService {
     return await this.validateBooking(dto);
   }
 
-  async getAllBooking() {
-    const bookings = await this.bookingModel.find().exec(); // all bookings
-    return bookings;
+  async bookingsByUser(id: mongoose.Types.ObjectId): Promise<IBooking[]> {
+    return await this.bookingModel.find({ owner: id }).exec();
+  }
+
+  async getAllBookings(): Promise<IBooking[]> {
+    return await this.bookingModel.find().exec();
   }
 }

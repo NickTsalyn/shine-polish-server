@@ -1,24 +1,22 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import mongoose from "mongoose";
 import { BookingsService } from "./bookings.service";
 import { CreateBookingDto } from "./dto/create-booking.dto";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { RolesGuard } from "src/auth/guards/roles.guard";
-import { Roles } from "src/common/decorators";
-import { UserRole } from "src/common/enums";
+import { ParseObjectIdPipe } from "src/common/pipes/object-ID.pipe";
 
 @Controller("bookings")
 export class BookingsController {
-  constructor(private bookingsService: BookingsService) {}
+  constructor(private readonly bookingsService: BookingsService) {}
 
   @Post()
   create(@Body() bookingDto: CreateBookingDto) {
     return this.bookingsService.createBooking(bookingDto);
   }
 
-  @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN)
-  allBookings() {
-    return this.bookingsService.getAllBooking();
+  @Get(":id")
+  @UseGuards(JwtAuthGuard)
+  bookingsById(@Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId) {
+    return this.bookingsService.bookingsByUser(id);
   }
 }
