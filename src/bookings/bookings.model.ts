@@ -7,61 +7,61 @@ export class Booking {
   @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
   _id: mongoose.Types.ObjectId;
   
-  @Prop({ required: true })
+  @Prop()
   email: string;
 
-  @Prop({ required: true })
+  @Prop()
   name: string;
 
-  @Prop({ required: true })
+  @Prop()
   surname: string;
 
-  @Prop({ required: true })
+  @Prop()
   phone: string;
 
   @Prop({ required: true })
   address: string;
 
-  @Prop({ required: true })
+  @Prop()
   areas: string;
 
-  @Prop({ required: true })
+  @Prop()
   city: string;
 
   @Prop()
   aptSuite: string;
 
-  @Prop({ required: true })
+  @Prop()
   zipCode: string;
 
-  @Prop({ type: Date, required: true })
+  @Prop({ type: Date })
   selectedDate: Date;
 
-  @Prop({ required: true })
+  @Prop()
   time: string;
 
-  @Prop({ required: true })
+  @Prop()
   bedroom: number;
 
-  @Prop({ required: true })
+  @Prop()
   bathroom: number;
 
   @Prop({ type: [String], default: [] })
   extras: string[];
 
-  @Prop({ required: true })
+  @Prop()
   services: string;
 
-  @Prop({ required: true })
+  @Prop()
   frequency: string;
 
-  @Prop({ required: true })
+  @Prop()
   aboutUs: string;
 
-  @Prop({ required: true })
+  @Prop()
   specialInstructions: string;
 
-  @Prop({ required: true })
+  @Prop()
   homeAccess: string;
 
   @Prop()
