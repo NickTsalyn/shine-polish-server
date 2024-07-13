@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import mongoose from "mongoose";
 import { BookingsService } from "./bookings.service";
-import { CreateBookingDto } from "./dto/create-booking.dto";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { ParseObjectIdPipe } from "src/common/pipes/object-ID.pipe";
+import { CreateBookingDto } from "./dto";
 
 @Controller("bookings")
 export class BookingsController {
