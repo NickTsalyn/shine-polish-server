@@ -9,4 +9,7 @@ export const AppError = {
   SESSION_EXPIRED: "Session expired, please login again",
   ONE_DOCUMENT: "Please note that only one document is permitted in the collection. Should you wish to update or delete it, please do so.",
   NO_DOCUMENT: "There are no documents to be deleted",
+  BOOKING_NOT_FOUND: "The booking could not be found",
+  OPTIONS_NOT_FOUND: "The options could not be found",
+  OPTIONS_TYPE_NOT_FOUND: "Option type not found",
 };
