@@ -2,11 +2,29 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { UserRole } from "src/common/enums";
 
+@Schema({ _id: false })
+export class Address {
+  @Prop({ required: true })
+  city: string;
+
+  @Prop({ required: true })
+  street: string;
+
+  @Prop()
+  aptSuite?: string;
+
+  @Prop({ required: true })
+  zip: string;
+
+  @Prop({ required: true })
+  state: string;
+}
+
 @Schema({ versionKey: false, timestamps: true })
 export class Booking {
   @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
   _id: mongoose.Types.ObjectId;
-  
+
   @Prop()
   email: string;
 
@@ -19,20 +37,11 @@ export class Booking {
   @Prop()
   phone: string;
 
-  @Prop({ required: true })
-  address: string;
+  @Prop({ type: Address })
+  address: Address;
 
   @Prop()
   areas: string;
-
-  @Prop()
-  city: string;
-
-  @Prop()
-  aptSuite: string;
-
-  @Prop()
-  zipCode: string;
 
   @Prop({ type: Date })
   selectedDate: Date;

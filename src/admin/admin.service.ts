@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import mongoose from "mongoose";
 import { BookingOption } from "src/bookings/booking-options.model";
+import { Booking } from "src/bookings/bookings.model";
 import { BookingsService } from "src/bookings/bookings.service";
 import { CreateBookingOptionDto, OptionDto } from "src/bookings/dto";
-import { IBooking } from "src/common/interfaces";
 import { User } from "src/users/users.model";
 import { UsersService } from "src/users/users.service";
 
@@ -18,11 +18,11 @@ export class AdminService {
     return await this.userService.allUsers();
   }
 
-  async allBookings(): Promise<IBooking[]> {
+  async allBookings(): Promise<Booking[]> {
     return await this.bookingsService.getAllBookings();
   }
 
-  async deleteBooking(id: mongoose.Types.ObjectId): Promise<IBooking> {
+  async deleteBooking(id: mongoose.Types.ObjectId): Promise<Booking> {
     return await this.bookingsService.deleteBookingByID(id);
   }
 
