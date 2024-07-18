@@ -13,19 +13,19 @@ import { BookingAddressDto } from "./booking-address.dto";
 
 export class CreateBookingDto {
   @IsEmail()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   email: string;
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   name: string;
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   surname: string;
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   phone: string;
 
   @ValidateNested()
@@ -33,23 +33,23 @@ export class CreateBookingDto {
   address: BookingAddressDto;
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   areas: string;
 
   @IsDateString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   selectedDate: Date;
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   time: string;
 
   @IsNumber()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   bedroom: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   bathroom: number;
 
   @IsArray()
@@ -58,23 +58,23 @@ export class CreateBookingDto {
   extras?: string[];
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   services: string;
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   frequency: string;
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   aboutUs: string;
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   specialInstructions: string;
 
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   homeAccess: string;
 
   @IsString()
