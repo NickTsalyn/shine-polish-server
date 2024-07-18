@@ -30,10 +30,6 @@ export class AdminService {
     return await this.bookingsService.createBookingOption(dto);
   }
 
-  async getOptions(): Promise<BookingOption> {
-    return await this.bookingsService.getBookingOptions();
-  }
-
   async addBookingOption(optionType: string, dto: OptionDto): Promise<BookingOption> {
     return await this.bookingsService.addBookingOption(optionType, dto);
   }

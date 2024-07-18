@@ -49,11 +49,6 @@ export class AdminController {
     return this.adminService.createBookingOption(dto);
   }
 
-  @Get("bookings/option")
-  getOptions() {
-    return this.adminService.getOptions();
-  }
-
   @Patch("bookings/:optionType")
   addOption(
     @Param("optionType", OptionTypeValidationPipe) optionType: string,

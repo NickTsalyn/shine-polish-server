@@ -14,6 +14,11 @@ export class BookingsController {
     return this.bookingsService.createBooking(bookingDto);
   }
 
+  @Get("options")
+  getOptions() {
+    return this.bookingsService.getBookingOptions();
+  }
+
   @Get(":id")
   @UseGuards(JwtAuthGuard)
   bookingsById(@Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId) {
