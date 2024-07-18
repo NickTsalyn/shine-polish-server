@@ -7,8 +7,8 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
-  UsePipes,
 } from "@nestjs/common";
 import mongoose from "mongoose";
 import { AdminService } from "./admin.service";
@@ -16,7 +16,11 @@ import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/auth/guards/roles.guard";
 import { Roles } from "src/common/decorators";
 import { UserRole } from "src/common/enums";
-import { CreateBookingOptionDto, OptionDto } from "src/bookings/dto";
+import {
+  CreateBookingOptionDto,
+  OptionDto,
+  UpdatePricingDto,
+} from "src/bookings/dto";
 import { OptionTypeValidationPipe, ParseObjectIdPipe } from "src/common/pipes";
 
 @Controller("admin")
@@ -58,6 +62,11 @@ export class AdminController {
     return this.adminService.addBookingOption(optionType, dto);
   }
 
+  @Put("bookings/pricing")
+  updatePricing(@Body() dto: UpdatePricingDto) {
+    return this.adminService.updateBookingPricing(dto);
+  }
+
   @Delete("bookings/:optionType/:value")
   @HttpCode(204)
   removeOption(
@@ -67,7 +76,7 @@ export class AdminController {
     return this.adminService.removeBookingOption(optionType, value);
   }
 
-  @Delete("bookings/option")
+  @Delete("bookingOptions")
   @HttpCode(204)
   clearBookingOptions() {
     return this.adminService.clearBookingOptions();
