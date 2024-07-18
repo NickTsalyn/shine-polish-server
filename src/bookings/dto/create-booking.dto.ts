@@ -6,7 +6,10 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from "class-validator";
+import { Type } from "class-transformer";
+import { BookingAddressDto } from "./booking-address.dto";
 
 export class CreateBookingDto {
   @IsEmail()
@@ -25,25 +28,13 @@ export class CreateBookingDto {
   @IsNotEmpty()
   phone: string;
 
-  @IsString()
-  @IsNotEmpty()
-  address: string;
+  @ValidateNested()
+  @Type(() => BookingAddressDto)
+  address: BookingAddressDto;
 
   @IsString()
   @IsNotEmpty()
   areas: string;
-
-  @IsString()
-  @IsNotEmpty()
-  city: string;
-
-  @IsString()
-  @IsOptional()
-  aptSuite?: string;
-
-  @IsString()
-  @IsNotEmpty()
-  zipCode: string;
 
   @IsDateString()
   @IsNotEmpty()

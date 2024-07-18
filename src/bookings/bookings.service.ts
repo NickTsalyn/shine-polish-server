@@ -6,7 +6,6 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { Booking } from "./bookings.model";
-import { IBooking } from "src/common/interfaces";
 import { UsersService } from "src/users/users.service";
 import { User } from "src/users/users.model";
 import { BookingOption } from "./booking-options.model";
@@ -21,7 +20,7 @@ export class BookingsService {
     private readonly userService: UsersService
   ) {}
 
-  private async validateBooking(dto: CreateBookingDto): Promise<IBooking> {
+  private async validateBooking(dto: CreateBookingDto): Promise<Booking> {
     const isExistUser: User = await this.userService.findOneByEmail(dto.email);
     if (isExistUser) {
       const newBooking: Booking = await this.bookingModel.create(dto);
@@ -39,19 +38,19 @@ export class BookingsService {
     return await this.bookingModel.create(dto);
   }
 
-  async createBooking(dto: CreateBookingDto): Promise<IBooking> {
+  async createBooking(dto: CreateBookingDto): Promise<Booking> {
     return await this.validateBooking(dto);
   }
 
-  async bookingsByUser(id: mongoose.Types.ObjectId): Promise<IBooking[]> {
+  async bookingsByUser(id: mongoose.Types.ObjectId): Promise<Booking[]> {
     return await this.bookingModel.find({ owner: id }).exec();
   }
 
-  async getAllBookings(): Promise<IBooking[]> {
+  async getAllBookings(): Promise<Booking[]> {
     return await this.bookingModel.find().exec();
   }
 
-  async deleteBookingByID(id: mongoose.Types.ObjectId): Promise<IBooking> {
+  async deleteBookingByID(id: mongoose.Types.ObjectId): Promise<Booking> {
     const booking = await this.bookingModel.findById(id).exec();
     if (!booking) throw new BadRequestException(AppError.BOOKING_NOT_FOUND);
 
