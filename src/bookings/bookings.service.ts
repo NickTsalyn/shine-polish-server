@@ -9,8 +9,9 @@ import { Booking } from "./bookings.model";
 import { UsersService } from "src/users/users.service";
 import { User } from "src/users/users.model";
 import { BookingOption } from "./booking-options.model";
-import { CreateBookingDto, CreateBookingOptionDto, OptionDto } from "./dto";
+import { CreateBookingDto, CreateBookingOptionDto, OptionDto, UpdatePricingDto } from "./dto";
 import { AppError } from "src/common/constants";
+import { Pricing } from "src/common/enums";
 
 @Injectable()
 export class BookingsService {
@@ -72,6 +73,19 @@ export class BookingsService {
     const update = { $push: { [optionType]: dto } };
 
     const options = await this.bookingOptionModel.findOneAndUpdate({}, update, { new: true });
+    if (!options) throw new NotFoundException(AppError.OPTIONS_NOT_FOUND);
+
+    return options;
+  }
+
+  async updateBookingPricing(dto: UpdatePricingDto): Promise<BookingOption> {
+    for (const key in dto) {
+      if (!Object.values(Pricing).includes(key as Pricing)) throw new BadRequestException(`${key} is not a valid pricing field`);
+    }
+
+    if (dto.base < 0 || dto.coff < 0 || dto.bathPrice < 0) throw new BadRequestException(AppError.INVALID_PRICE);
+    
+    const options = await this.bookingOptionModel.findOneAndUpdate({}, dto, { new: true });
     if (!options) throw new NotFoundException(AppError.OPTIONS_NOT_FOUND);
 
     return options;

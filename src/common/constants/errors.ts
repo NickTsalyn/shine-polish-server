@@ -12,4 +12,5 @@ export const AppError = {
   BOOKING_NOT_FOUND: "The booking could not be found",
   OPTIONS_NOT_FOUND: "The options could not be found",
   OPTIONS_TYPE_NOT_FOUND: "Option type not found",
+  INVALID_PRICE: "Invalid price",
 };
