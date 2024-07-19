@@ -1,6 +1,5 @@
 import {
   IsArray,
-  IsDateString,
   IsEmail,
   IsNotEmpty,
   IsNumber,
@@ -36,9 +35,9 @@ export class CreateBookingDto {
   // @IsNotEmpty()
   areas: string;
 
-  @IsDateString()
+  @IsString()
   // @IsNotEmpty()
-  selectedDate: Date;
+  selectedDate: string;
 
   @IsString()
   // @IsNotEmpty()

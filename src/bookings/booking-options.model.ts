@@ -7,13 +7,16 @@ export class BookingOption {
   _id: mongoose.Types.ObjectId;
 
   @Prop({ default: [], required: true })
-  areaOptions: { value: string; label: string }[];
+  areaOptions: { name: string; value: number }[];
 
   @Prop({ default: [], required: true })
-  serviceOptions: { value: string; label: string }[];
+  serviceOptions: { name: string; value: number }[];
 
   @Prop({ default: [], required: true })
-  extrasOptions: { value: string; label: string }[];
+  extrasOptions: { name: string; value: number }[];
+
+  @Prop({ default: [], required: true })
+  discountOptions: { name: string; value: number }[];
 
   @Prop({ required: true })
   base: number;

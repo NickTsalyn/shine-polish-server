@@ -62,13 +62,13 @@ export class AdminController {
     return this.adminService.updateBookingPricing(dto);
   }
 
-  @Delete("bookings/:optionType/:value")
+  @Delete("bookings/:optionType/:name")
   @HttpCode(204)
   removeOption(
     @Param("optionType", OptionTypeValidationPipe) optionType: string,
-    @Param("value") value: string
+    @Param("name") name: string
   ) {
-    return this.adminService.removeBookingOption(optionType, value);
+    return this.adminService.removeBookingOption(optionType, name);
   }
 
   @Delete("bookingOptions")
