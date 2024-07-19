@@ -1,9 +1,9 @@
-import { IsString } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
 
 export class OptionDto {
   @IsString()
-  value: string;
+  name: string;
 
-  @IsString()
-  label: string;
+  @IsNumber()
+  value: number;
 }

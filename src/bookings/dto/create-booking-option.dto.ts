@@ -21,6 +21,12 @@ export class CreateBookingOptionDto {
   @Type(() => OptionDto)
   extrasOptions: OptionDto[];
   
+  @IsArray()
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => OptionDto)
+  discountOptions: OptionDto[];
+  
   @IsNumber()
   @IsNotEmpty()
   base: number;

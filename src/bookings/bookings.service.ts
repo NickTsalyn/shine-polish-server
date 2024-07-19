@@ -91,8 +91,8 @@ export class BookingsService {
     return options;
   }
 
-  async removeBookingOption(optionType: string, value: string): Promise<BookingOption> {
-    const update = { $pull: { [optionType]: { value } } };
+  async removeBookingOption(optionType: string, name: string): Promise<BookingOption> {
+    const update = { $pull: { [optionType]: { name } } };
 
     const options = await this.bookingOptionModel.findOneAndUpdate({}, update, { new: true });
     if (!options) throw new NotFoundException(AppError.OPTIONS_NOT_FOUND);

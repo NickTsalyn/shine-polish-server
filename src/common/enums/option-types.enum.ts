@@ -1,5 +1,6 @@
 export enum OptionTypes {
   AREA_OPTIONS = "areaOptions",
-  SERVICE_OPTIONS = "serviceOptions",
+  DISCOUNT_OPTIONS = "discountOptions",
   EXTRAS_OPTIONS = "extrasOptions",
+  SERVICE_OPTIONS = "serviceOptions",
 }
