@@ -3,24 +3,37 @@ import mongoose from "mongoose";
 import { BookingsService } from "./bookings.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { ParseObjectIdPipe } from "src/common/pipes/object-ID.pipe";
-import { CreateBookingDto } from "./dto";
+import { CreateBookingDto, CreateBookingOptionDto } from "./dto";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Bookings")
 @Controller("bookings")
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
-
+  
   @Post()
+  @ApiOperation({ summary: "Create booking for Guests or Users" })
+  @ApiResponse({ status: 201, type: CreateBookingDto })
+  @ApiResponse({ status: 400, description: "Bad request" })
   create(@Body() bookingDto: CreateBookingDto) {
     return this.bookingsService.createBooking(bookingDto);
   }
-
+  
   @Get("options")
+  @ApiOperation({ summary: "Get booking options [ PUBLIC ]" })
+  @ApiResponse({ status: 200, type: CreateBookingOptionDto })
+  @ApiResponse({ status: 400, description: "Bad request" })
   getOptions() {
     return this.bookingsService.getBookingOptions();
   }
-
+  
   @Get(":id")
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth("accessToken")
+  @ApiOperation({ summary: "Get booking by ID for logged in user" })
+  @ApiResponse({ status: 200, type: CreateBookingDto })
+  @ApiResponse({ status: 400, description: "Value is not a valid ID" })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
   bookingsById(@Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId) {
     return this.bookingsService.bookingsByUser(id);
   }

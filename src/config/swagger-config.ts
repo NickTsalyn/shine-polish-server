@@ -3,9 +3,9 @@ import { DocumentBuilder } from "@nestjs/swagger";
 export const swaggerConfig = new DocumentBuilder()
   .setTitle("Shine&Polish API")
   .setDescription(
-    "API documentation for Shine&Polish application. [Backend github repository](https://github.com/NickTsalyn/shine-polish-server)"
+    "API documentation for [Shine&Polish](https://github.com/NickTsalyn/shine-polish) application. [Backend github repository](https://github.com/NickTsalyn/shine-polish-server)"
   )
-  .addServer("http://localhost:8888")
+  .addServer("https://shine-polish-server.onrender.com")
   .setVersion("1.0.2")
   .addBearerAuth(
     {
@@ -16,4 +16,6 @@ export const swaggerConfig = new DocumentBuilder()
     "accessToken"
   )
   .addTag("Authentication", "Authentication related endpoints")
+  .addTag("Admin", "Admin related endpoints")
+  .addTag("Bookings", "Bookings related endpoints")
   .build();

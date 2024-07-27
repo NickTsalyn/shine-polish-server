@@ -3,6 +3,7 @@ export const AppError = {
   USER_NOT_FOUND: "User does not exist",
   WRONG_DATA: "Email or password is wrong",
   UNAUTHORIZED: "User is not authenticated",
+  FORBIDDEN: "Forbidden resource",
   FAILED_SIGNUP: "Failed to sign up",
   FAILED_SIGNIN: "Failed to sign in! Invalid credentials or user does not exist",
   FAILED_REFRESH: "Failed to refresh session",
