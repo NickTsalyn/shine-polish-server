@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Get, HttpCode, Post, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
-import { SessionInfoDto, SignInDto, SignUpDto } from "./dto";
+import { SessionInfoDto, SessionInfoResponceDto, SignInDto, SignInResponceDto, SignUpDto, SignUpResponceDto } from "./dto";
 import { AuthService } from "./auth.service";
 import { TokensService } from "./tokens.service";
 import { Cookie, SessionInfo, UserAgent } from "src/common/decorators";
@@ -8,7 +8,9 @@ import { Response } from "express";
 import { AppError } from "src/common/constants";
 import { IUser } from "src/common/interfaces";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Authentication")
 @Controller("auth")
 export class AuthController {
   constructor(
@@ -20,6 +22,10 @@ export class AuthController {
   private static readonly REFRESH_TOKEN = "refreshToken";
 
   @Post("signup")
+  @ApiOperation({ summary: "User registration" })
+  @ApiResponse({ status: 201, type: SignUpResponceDto, description: "Successfully operation" })
+  @ApiResponse({ status: 400, description: AppError.FAILED_SIGNUP })
+  @ApiResponse({ status: 409, description: AppError.USER_EXIST })
   async signup(
     @Body() dto: SignUpDto,
     @UserAgent() agent: string,
@@ -31,6 +37,10 @@ export class AuthController {
   }
 
   @Post("signin")
+  @ApiOperation({ summary: "User login" })
+  @ApiResponse({ status: 201, type: SignInResponceDto, description: "Successfully operation" })
+  @ApiResponse({ status: 400, description: AppError.FAILED_SIGNIN })
+  @ApiResponse({ status: 401, description: AppError.WRONG_DATA })
   async signin(
     @Body() dto: SignInDto,
     @Res({ passthrough: true }) res: Response,
@@ -47,6 +57,12 @@ export class AuthController {
 
   @Get("refresh-session")
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth("accessToken")
+  @ApiOperation({ summary: "Refresh session" })
+  @ApiResponse({ status: 200, type: SessionInfoResponceDto, description: "Successfully operation" })
+  @ApiResponse({ status: 400, description: AppError.FAILED_REFRESH })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 404, description: AppError.SESSION_EXPIRED })
   async getSessionInfo(
     @SessionInfo() session: SessionInfoDto,
     @Cookie(AuthController.REFRESH_TOKEN) refreshToken: string, 
@@ -66,6 +82,10 @@ export class AuthController {
   @Post("signout")
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)
+  @ApiBearerAuth("accessToken")
+  @ApiOperation({ summary: "User logout" })
+  @ApiResponse({ status: 204, description: "Successfully operation" })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
   async signout(
     @Cookie(AuthController.REFRESH_TOKEN) refreshToken: string, 
     @Res({ passthrough: true }) res: Response,
