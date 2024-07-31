@@ -10,10 +10,11 @@ import {
 import { Type } from "class-transformer";
 import { BookingAddressDto } from "./booking-address.dto";
 import { ApiProperty } from "@nestjs/swagger";
+import { AppValidation } from "src/common/constants";
 
 export class CreateBookingDto {
   @ApiProperty({ example: "alvaro_capibara@example.com" })
-  @IsEmail()
+  @IsEmail({}, { message: AppValidation.IS_EMAIL })
   // @IsNotEmpty()
   email: string;
 
