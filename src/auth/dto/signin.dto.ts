@@ -1,10 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { AppValidation } from "src/common/constants";
 import { UserRole } from "src/common/enums";
 
 export class SignInDto {
   @ApiProperty({ example: "alvaro_capibara@example.com" })
-  @IsEmail()
+  @IsEmail({}, { message: AppValidation.IS_EMAIL })
   @IsNotEmpty()
   email: string;
   
@@ -22,7 +23,7 @@ export class SignInResponce {
   username: string;
   
   @ApiProperty({ example: "alvaro_capibara@example.com" })
-  @IsEmail()
+  @IsEmail({}, { message: AppValidation.IS_EMAIL })
   @IsNotEmpty()
   email: string;
   

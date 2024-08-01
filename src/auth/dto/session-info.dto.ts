@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsString,
 } from "class-validator";
+import { AppValidation } from "src/common/constants";
 import { UserRole } from "src/common/enums";
 
 export class SessionInfoDto {
@@ -15,7 +16,7 @@ export class SessionInfoDto {
   id: string;
 
   @ApiProperty({ example: "alvaro_capibara@example.com" })
-  @IsEmail()
+  @IsEmail({}, { message: AppValidation.IS_EMAIL })
   @IsNotEmpty()
   email: string;
 

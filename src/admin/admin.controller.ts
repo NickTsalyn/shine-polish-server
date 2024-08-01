@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,8 +9,20 @@ import {
   Patch,
   Post,
   Put,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from "@nestjs/swagger";
 import mongoose from "mongoose";
 import { AdminService } from "./admin.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
@@ -22,10 +35,10 @@ import {
   UpdatePricingDto,
 } from "src/bookings/dto";
 import { OptionTypeValidationPipe, ParseObjectIdPipe } from "src/common/pipes";
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "src/users/users.model";
 import { AppError } from "src/common/constants";
 import { Booking } from "src/bookings/bookings.model";
+import { ImagePair } from "src/files/image-pair.model";
 
 @ApiTags("Admin")
 @ApiBearerAuth("accessToken")
@@ -59,7 +72,7 @@ export class AdminController {
   @ApiResponse({ status: 400, description: AppError.BOOKING_NOT_FOUND })
   @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
   @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
-  @ApiParam({ name: "id", type: String, description: "Booking ID"})
+  @ApiParam({ name: "id", type: String, description: "Booking ID" })
   deleteBooking(@Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId) {
     return this.adminService.deleteBooking(id);
   }
@@ -121,5 +134,69 @@ export class AdminController {
   @HttpCode(204)
   clearBookingOptions() {
     return this.adminService.clearBookingOptions();
+  }
+
+  @Post("files/images/upload")
+  @ApiOperation({ summary: "Upload image pair [ ADMIN only ]" })
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        beforeFile: {
+          type: "string",
+          format: "binary",
+        },
+        afterFile: {
+          type: "string",
+          format: "binary",
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 201, type: ImagePair })
+  @ApiResponse({ status: 400, description: AppError.IMAGE_PAIR_REQUIRED })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: "beforeFile", maxCount: 1 },
+      { name: "afterFile", maxCount: 1 },
+    ])
+  )
+  uploadImages(
+    @UploadedFiles()
+    files: {
+      beforeFile?: Express.Multer.File[];
+      afterFile?: Express.Multer.File[];
+    }
+  ) {
+    const [beforeFile] = files.beforeFile || [];
+    const [afterFile] = files.afterFile || [];
+    if (!beforeFile || !afterFile) throw new BadRequestException(AppError.IMAGE_PAIR_REQUIRED);
+
+    return this.adminService.uploadImagePair(beforeFile, afterFile);
+  }
+
+  @Get("files/images")
+  @ApiOperation({ summary: "Get all image pairs [ ADMIN only ]" })
+  @ApiResponse({ status: 200, type: [ImagePair] })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
+  @ApiResponse({ status: 404, description: AppError.IMAGE_PAIR_NOT_FOUND })
+  getImagePairs() {
+    return this.adminService.allImagePairs();
+  }
+
+  @Delete("files/images/:id")
+  @ApiOperation({ summary: "Delete image pair [ ADMIN only ]" })
+  @ApiResponse({ status: 204, description: "Successfully operation" })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
+  @ApiResponse({ status: 404, description: AppError.IMAGE_PAIR_NOT_FOUND })
+  @ApiParam({ name: "id", type: String, description: "Image pair ID" })
+  @HttpCode(204)
+  deleteImagePair(@Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId) {
+    return this.adminService.deleteImagePairByID(id);
   }
 }
