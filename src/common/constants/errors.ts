@@ -14,4 +14,6 @@ export const AppError = {
   OPTIONS_NOT_FOUND: "The options could not be found",
   OPTIONS_TYPE_NOT_FOUND: "Option type not found",
   INVALID_PRICE: "Invalid price",
+  IMAGE_PAIR_REQUIRED: "Both before and after images are required",
+  IMAGE_PAIR_NOT_FOUND: "No image pairs could be found",
 };

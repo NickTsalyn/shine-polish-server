@@ -4,6 +4,8 @@ import { BookingOption } from "src/bookings/booking-options.model";
 import { Booking } from "src/bookings/bookings.model";
 import { BookingsService } from "src/bookings/bookings.service";
 import { CreateBookingOptionDto, OptionDto, UpdatePricingDto } from "src/bookings/dto";
+import { FilesService } from "src/files/files.service";
+import { ImagePair } from "src/files/image-pair.model";
 import { User } from "src/users/users.model";
 import { UsersService } from "src/users/users.service";
 
@@ -11,7 +13,8 @@ import { UsersService } from "src/users/users.service";
 export class AdminService {
   constructor(
     private readonly bookingsService: BookingsService,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
+    private readonly filesService: FilesService
   ) {}
 
   async allUsers(): Promise<User[]> {
@@ -44,5 +47,17 @@ export class AdminService {
 
   async clearBookingOptions() {
     return await this.bookingsService.clearBookingOptions();
+  }
+
+  async uploadImagePair(beforeFile: Express.Multer.File, afterFile: Express.Multer.File): Promise<ImagePair> {
+    return await this.filesService.uploadImage(beforeFile, afterFile);
+  }
+
+  async allImagePairs(): Promise<ImagePair[]> {
+    return await this.filesService.getImagePairs();
+  }
+
+  async deleteImagePairByID(id: mongoose.Types.ObjectId): Promise<ImagePair> {
+    return await this.filesService.deleteImagePair(id);
   }
 }

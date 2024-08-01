@@ -8,9 +8,17 @@ export class ImagePair {
   @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
   _id: mongoose.Types.ObjectId;
 
+  @ApiProperty({ example: "xej5ozeizbs3owejq8wz", description: "Cloudinary ID" })
+  @Prop({ required: true })
+  beforeImageID: string;
+  
   @ApiProperty({ example: "https://before-image-url-example.com", description: "URL" })
   @Prop({ required: true })
-  beforeIageURL: string;
+  beforeImageURL: string;
+  
+  @ApiProperty({ example: "xej5ozeizbs3owejq8wz", description: "Cloudinary ID" })
+  @Prop({ required: true })
+  afterImageID: string;
 
   @ApiProperty({ example: "https://after-image-url-example.com", description: "URL" })
   @Prop({ required: true })
