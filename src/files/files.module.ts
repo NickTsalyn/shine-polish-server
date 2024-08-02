@@ -5,6 +5,8 @@ import * as cloudinary from "cloudinary";
 import { FilesService } from "./files.service";
 import { ImagePair, ImagePairSchema } from "./image-pair.model";
 import { cloudinaryConfig } from "src/config";
+import { FilesController } from './files.controller';
+import { MulterModule } from "@nestjs/platform-express";
 
 @Module({
   providers: [
@@ -22,8 +24,12 @@ import { cloudinaryConfig } from "src/config";
     MongooseModule.forFeature([
       { name: ImagePair.name, schema: ImagePairSchema },
     ]),
+    MulterModule.register({
+      dest: "./src/files/temp",
+    }),
     ConfigModule,
   ],
   exports: [FilesService, "CLOUDINARY"],
+  controllers: [FilesController],
 })
 export class FilesModule {}

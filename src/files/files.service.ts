@@ -34,7 +34,7 @@ export class FilesService {
   }
 
   async getImagePairs(): Promise<ImagePair[]> {
-    const imagePairs: ImagePair[] = await this.imagePairModel.find({});
+    const imagePairs: ImagePair[] = await this.imagePairModel.find({}).select("-beforeImageID -afterImageID").exec();
     if (!imagePairs) throw new NotFoundException(AppError.IMAGE_PAIR_NOT_FOUND);
 
     return imagePairs;
