@@ -53,10 +53,6 @@ export class AdminService {
     return await this.filesService.uploadImage(beforeFile, afterFile);
   }
 
-  async allImagePairs(): Promise<ImagePair[]> {
-    return await this.filesService.getImagePairs();
-  }
-
   async deleteImagePairByID(id: mongoose.Types.ObjectId): Promise<ImagePair> {
     return await this.filesService.deleteImagePair(id);
   }

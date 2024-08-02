@@ -178,16 +178,6 @@ export class AdminController {
     return this.adminService.uploadImagePair(beforeFile, afterFile);
   }
 
-  @Get("files/images")
-  @ApiOperation({ summary: "Get all image pairs [ ADMIN only ]" })
-  @ApiResponse({ status: 200, type: [ImagePair] })
-  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
-  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
-  @ApiResponse({ status: 404, description: AppError.IMAGE_PAIR_NOT_FOUND })
-  getImagePairs() {
-    return this.adminService.allImagePairs();
-  }
-
   @Delete("files/images/:id")
   @ApiOperation({ summary: "Delete image pair [ ADMIN only ]" })
   @ApiResponse({ status: 204, description: "Successfully operation" })
