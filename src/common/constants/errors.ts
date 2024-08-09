@@ -16,4 +16,5 @@ export const AppError = {
   INVALID_PRICE: "Invalid price",
   IMAGE_PAIR_REQUIRED: "Both before and after images are required",
   IMAGE_PAIR_NOT_FOUND: "No image pairs could be found",
+  EMPLOYEE_EXIST: "Employee with this email exist",
 };

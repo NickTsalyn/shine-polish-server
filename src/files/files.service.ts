@@ -11,9 +11,19 @@ export class FilesService {
     @InjectModel(ImagePair.name)
     private readonly imagePairModel: Model<ImagePair>,
     @Inject("CLOUDINARY") private readonly cloudinary
-  ) {}
+  ) { }
+  
+  async uploadFile(file: Express.Multer.File){
+    const avatarCloud = await this.cloudinary.uploader.upload(file.path);
 
-  async uploadImage(
+    console.log(file.path);
+    await fs.unlink(file.path);
+
+
+    return avatarCloud;
+  }
+
+  async uploadImagePair(
     beforeFile: Express.Multer.File,
     afterFile: Express.Multer.File
   ): Promise<ImagePair> {

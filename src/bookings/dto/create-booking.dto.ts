@@ -41,7 +41,7 @@ export class CreateBookingDto {
   @ApiProperty({ example: "Downtown" })
   @IsString()
   // @IsNotEmpty()
-  areas: string;
+  area: string;
 
   @ApiProperty({ example: "2022-01-01" })
   @IsString()
@@ -72,7 +72,7 @@ export class CreateBookingDto {
   @ApiProperty({ example: "Basic Cleaning" })
   @IsString()
   // @IsNotEmpty()
-  services: string;
+  service: string;
 
   @ApiProperty({ example: "Weekly" })
   @IsString()
@@ -93,6 +93,11 @@ export class CreateBookingDto {
   @IsString()
   // @IsNotEmpty()
   homeAccess: string;
+
+  @ApiProperty({ example: 10 })
+  @IsString()
+  @IsOptional()
+  tips?: string;
 
   @ApiProperty({ example: "SHINEPOLISH2024" })
   @IsString()

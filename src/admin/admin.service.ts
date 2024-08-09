@@ -6,6 +6,9 @@ import { BookingsService } from "src/bookings/bookings.service";
 import { CreateBookingOptionDto, OptionDto, UpdatePricingDto } from "src/bookings/dto";
 import { FilesService } from "src/files/files.service";
 import { ImagePair } from "src/files/image-pair.model";
+import { CreateEmployeeDto } from "src/users/dto";
+import { Employee } from "src/users/employees.model";
+import { EmployeesService } from "src/users/employees.service";
 import { User } from "src/users/users.model";
 import { UsersService } from "src/users/users.service";
 
@@ -14,6 +17,7 @@ export class AdminService {
   constructor(
     private readonly bookingsService: BookingsService,
     private readonly userService: UsersService,
+    private readonly employeesService: EmployeesService,
     private readonly filesService: FilesService
   ) {}
 
@@ -50,10 +54,18 @@ export class AdminService {
   }
 
   async uploadImagePair(beforeFile: Express.Multer.File, afterFile: Express.Multer.File): Promise<ImagePair> {
-    return await this.filesService.uploadImage(beforeFile, afterFile);
+    return await this.filesService.uploadImagePair(beforeFile, afterFile);
   }
 
   async deleteImagePairByID(id: mongoose.Types.ObjectId): Promise<ImagePair> {
     return await this.filesService.deleteImagePair(id);
+  }
+
+  async addEmployee(dto: CreateEmployeeDto, avatar: Express.Multer.File): Promise<Employee> {
+    return await this.employeesService.save(dto, avatar);
+  }
+
+  async getAllEmployees(): Promise<Employee[]> {
+    return await this.employeesService.getAll();
   }
 }

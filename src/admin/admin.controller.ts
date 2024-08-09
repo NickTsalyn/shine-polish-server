@@ -9,11 +9,12 @@ import {
   Patch,
   Post,
   Put,
+  UploadedFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { FileFieldsInterceptor, FileInterceptor } from "@nestjs/platform-express";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -39,6 +40,8 @@ import { User } from "src/users/users.model";
 import { AppError } from "src/common/constants";
 import { Booking } from "src/bookings/bookings.model";
 import { ImagePair } from "src/files/image-pair.model";
+import { CreateEmployeeDto } from "src/users/dto";
+import { Employee } from "src/users/employees.model";
 
 @ApiTags("Admin")
 @ApiBearerAuth("accessToken")
@@ -188,5 +191,30 @@ export class AdminController {
   @HttpCode(204)
   deleteImagePair(@Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId) {
     return this.adminService.deleteImagePairByID(id);
+  }
+
+  @Post("employees")
+  @ApiOperation({ summary: "Create employee [ ADMIN only ]" })
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({ type: Employee })
+  @ApiResponse({ status: 201, type: Employee })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
+  @ApiResponse({ status: 409, description: AppError.EMPLOYEE_EXIST })
+  @UseInterceptors(FileInterceptor("avatar"))
+  createEmployee(
+    @Body() dto: CreateEmployeeDto,
+    @UploadedFile() avatar: Express.Multer.File
+  ) {
+    return this.adminService.addEmployee(dto, avatar);
+  }
+
+  @Get("employees")
+  @ApiOperation({ summary: "Get all employees [ ADMIN only ]" })
+  @ApiResponse({ status: 200, type: [Employee] })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
+  getAllEmployees() {
+    return this.adminService.getAllEmployees();
   }
 }

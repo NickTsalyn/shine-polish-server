@@ -54,7 +54,7 @@ export class Booking {
 
   @ApiProperty({ example: "Downtown" })
   @Prop()
-  areas: string;
+  area: string;
 
   @ApiProperty({ example: "2025-01-01" })
   @Prop({ type: Date })
@@ -78,7 +78,7 @@ export class Booking {
 
   @ApiProperty({ example: "Basic Cleaning" })
   @Prop()
-  services: string;
+  service: string;
 
   @ApiProperty({ example: "Weekly" })
   @Prop()
@@ -95,6 +95,10 @@ export class Booking {
   @ApiProperty({ example: "Key under mat" })
   @Prop()
   homeAccess: string;
+
+  @ApiProperty({ example: 10 })
+  @Prop()
+  tips?: string;
 
   @ApiProperty({ example: "SUMMER2024" })
   @Prop()
