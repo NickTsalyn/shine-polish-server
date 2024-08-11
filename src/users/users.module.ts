@@ -4,7 +4,6 @@ import { UsersService } from "./users.service";
 import { EmployeesService } from "./employees.service";
 import { User, UserSchema } from "./users.model";
 import { Employee, EmployeeSchema } from "./employees.model";
-import { UsersController } from './users.controller';
 import { FilesModule } from "src/files/files.module";
 
 @Module({
@@ -15,6 +14,5 @@ import { FilesModule } from "src/files/files.module";
   ],
   providers: [UsersService, EmployeesService],
   exports: [UsersService, EmployeesService],
-  controllers: [UsersController],
 })
 export class UsersModule {}
