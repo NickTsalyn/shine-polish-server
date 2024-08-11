@@ -40,8 +40,9 @@ import { User } from "src/users/users.model";
 import { AppError } from "src/common/constants";
 import { Booking } from "src/bookings/bookings.model";
 import { ImagePair } from "src/files/image-pair.model";
-import { CreateEmployeeDto } from "src/users/dto";
+import { createEmployeeApiBodySchema, CreateEmployeeDto } from "src/users/dto";
 import { Employee } from "src/users/employees.model";
+import { createImagePairApiBody } from "src/files/dto";
 
 @ApiTags("Admin")
 @ApiBearerAuth("accessToken")
@@ -142,21 +143,7 @@ export class AdminController {
   @Post("files/images/upload")
   @ApiOperation({ summary: "Upload image pair [ ADMIN only ]" })
   @ApiConsumes("multipart/form-data")
-  @ApiBody({
-    schema: {
-      type: "object",
-      properties: {
-        beforeFile: {
-          type: "string",
-          format: "binary",
-        },
-        afterFile: {
-          type: "string",
-          format: "binary",
-        },
-      },
-    },
-  })
+  @ApiBody(createImagePairApiBody)
   @ApiResponse({ status: 201, type: ImagePair })
   @ApiResponse({ status: 400, description: AppError.IMAGE_PAIR_REQUIRED })
   @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
@@ -196,8 +183,9 @@ export class AdminController {
   @Post("employees")
   @ApiOperation({ summary: "Create employee [ ADMIN only ]" })
   @ApiConsumes("multipart/form-data")
-  @ApiBody({ type: Employee })
+  @ApiBody(createEmployeeApiBodySchema)
   @ApiResponse({ status: 201, type: Employee })
+  @ApiResponse({ status: 400, description: AppError.FILE_REQUIRED })
   @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
   @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
   @ApiResponse({ status: 409, description: AppError.EMPLOYEE_EXIST })
@@ -206,6 +194,7 @@ export class AdminController {
     @Body() dto: CreateEmployeeDto,
     @UploadedFile() avatar: Express.Multer.File
   ) {
+    if (!avatar) throw new BadRequestException(AppError.FILE_REQUIRED);
     return this.adminService.addEmployee(dto, avatar);
   }
 
@@ -216,5 +205,17 @@ export class AdminController {
   @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
   getAllEmployees() {
     return this.adminService.getAllEmployees();
+  }
+
+  @Delete("employees/:id")
+  @ApiOperation({ summary: "Delete employee [ ADMIN only ]" })
+  @ApiParam({ name: "id", type: String, description: "Employee ID" })
+  @ApiResponse({ status: 204, description: "Successfully operation" })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
+  @ApiResponse({ status: 404, description: AppError.EMPLOYEE_NOT_FOUND })
+  @HttpCode(204)
+  delete(@Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId) {
+    return this.adminService.deleteEmployee(id);
   }
 }

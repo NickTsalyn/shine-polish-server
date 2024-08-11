@@ -68,4 +68,8 @@ export class AdminService {
   async getAllEmployees(): Promise<Employee[]> {
     return await this.employeesService.getAll();
   }
+
+  async deleteEmployee(id: mongoose.Types.ObjectId): Promise<Employee> {
+    return await this.employeesService.delete(id);
+  }
 }

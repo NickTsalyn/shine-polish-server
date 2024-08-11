@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { Employee } from "./employees.model";
 import { CreateEmployeeDto } from "./dto";
 import { AppError } from "src/common/constants";
@@ -36,10 +36,15 @@ export class EmployeesService {
   }
 
   async getAll(): Promise<Employee[]> {
-    return await this.employeeModel.find().select("-").exec();
+    return await this.employeeModel.find().select("-avatarCloudID").exec();
   }
 
-  async delete(id: string): Promise<Employee> {
-    return await this.employeeModel.findByIdAndDelete(id).exec();
+  async delete(id: mongoose.Types.ObjectId): Promise<Employee> {
+    const employee = await this.employeeModel.findById(id).exec();
+    if (!employee) throw new ConflictException(AppError.EMPLOYEE_NOT_FOUND);
+
+    await this.filesService.deleteFile(employee.avatarCloudID);
+
+    return await this.employeeModel.findByIdAndDelete(employee._id).exec();
   }
 }
