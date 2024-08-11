@@ -14,13 +14,15 @@ export class FilesService {
   ) { }
   
   async uploadFile(file: Express.Multer.File){
-    const avatarCloud = await this.cloudinary.uploader.upload(file.path);
+    const fileCloud = await this.cloudinary.uploader.upload(file.path);
 
-    console.log(file.path);
     await fs.unlink(file.path);
 
+    return fileCloud;
+  }
 
-    return avatarCloud;
+  async deleteFile(cloudinaryID: string) {
+    await this.cloudinary.uploader.destroy(cloudinaryID);
   }
 
   async uploadImagePair(
