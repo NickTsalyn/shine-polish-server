@@ -6,12 +6,12 @@ import { AppModule } from "./app.module";
 import { swaggerConfig } from "./config";
 
 async function bootstrap() {
-  const { PORT, MAIN_URL } = process.env;
+  const { PORT, MAIN_URL, ADMIN_URL } = process.env;
 
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ["http://localhost:3000", "http://localhost:3001", MAIN_URL], // TODO: Remove localhost after deploy
+    origin: ["http://localhost:3000", "http://localhost:3001", MAIN_URL, ADMIN_URL], // TODO: Remove localhost after deploy
     credentials: true,
   });
 
