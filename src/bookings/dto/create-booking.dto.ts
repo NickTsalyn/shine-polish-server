@@ -103,4 +103,9 @@ export class CreateBookingDto {
   @IsString()
   @IsOptional()
   discountCode?: string;
+
+  @ApiProperty({ example: 333 })
+  @IsNumber()
+  // @IsNotEmpty()
+  totalPrice: number;
 }

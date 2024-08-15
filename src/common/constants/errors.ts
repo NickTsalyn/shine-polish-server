@@ -19,4 +19,5 @@ export const AppError = {
   IMAGE_PAIR_NOT_FOUND: "No image pairs could be found",
   EMPLOYEE_EXIST: "Employee with this email exist",
   EMPLOYEE_NOT_FOUND: "Employee does not exist",
+  NO_DATA_TO_UPDATE: "No data provided for update",
 };

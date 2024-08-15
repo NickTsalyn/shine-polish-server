@@ -9,7 +9,7 @@ import { Booking } from "./bookings.model";
 import { UsersService } from "src/users/users.service";
 import { User } from "src/users/users.model";
 import { BookingOption } from "./booking-options.model";
-import { CreateBookingDto, CreateBookingOptionDto, OptionDto, UpdatePricingDto } from "./dto";
+import { CreateBookingDto, CreateBookingOptionDto, EditBookingDto, OptionDto, UpdatePricingDto } from "./dto";
 import { AppError } from "src/common/constants";
 import { Pricing } from "src/common/enums";
 
@@ -39,21 +39,28 @@ export class BookingsService {
     return await this.bookingModel.create(dto);
   }
 
-  async createBooking(dto: CreateBookingDto): Promise<Booking> {
+  async create(dto: CreateBookingDto): Promise<Booking> {
     return await this.validateBooking(dto);
+  }
+
+  async edit(id: mongoose.Types.ObjectId, dto: EditBookingDto): Promise<Booking> {
+    const booking = await this.bookingModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+    if (!booking) throw new NotFoundException(AppError.BOOKING_NOT_FOUND);
+
+    return booking;
   }
 
   async bookingsByUser(id: mongoose.Types.ObjectId): Promise<Booking[]> {
     return await this.bookingModel.find({ owner: id }).exec();
   }
 
-  async getAllBookings(): Promise<Booking[]> {
+  async getAll(): Promise<Booking[]> {
     return await this.bookingModel.find().exec();
   }
 
-  async deleteBookingByID(id: mongoose.Types.ObjectId): Promise<Booking> {
+  async deleteByID(id: mongoose.Types.ObjectId): Promise<Booking> {
     const booking = await this.bookingModel.findById(id).exec();
-    if (!booking) throw new BadRequestException(AppError.BOOKING_NOT_FOUND);
+    if (!booking) throw new NotFoundException(AppError.BOOKING_NOT_FOUND);
 
     return await this.bookingModel.findByIdAndDelete(id).exec();
   }

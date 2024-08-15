@@ -14,7 +14,10 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { FileFieldsInterceptor, FileInterceptor } from "@nestjs/platform-express";
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from "@nestjs/platform-express";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -32,10 +35,11 @@ import { Roles } from "src/common/decorators";
 import { UserRole } from "src/common/enums";
 import {
   CreateBookingOptionDto,
+  EditBookingDto,
   OptionDto,
   UpdatePricingDto,
 } from "src/bookings/dto";
-import { OptionTypeValidationPipe, ParseObjectIdPipe } from "src/common/pipes";
+import { BodyKeysValidationPipe, EmptyBodyValidationPipe, OptionTypeValidationPipe, ParseObjectIdPipe } from "src/common/pipes";
 import { User } from "src/users/users.model";
 import { AppError } from "src/common/constants";
 import { Booking } from "src/bookings/bookings.model";
@@ -70,6 +74,22 @@ export class AdminController {
     return this.adminService.allBookings();
   }
 
+  @Put("bookings/:id")
+  @ApiOperation({ summary: "Edit booking by ID [ ADMIN only ]" })
+  @ApiResponse({ status: 200, type: Booking })
+  @ApiResponse({ status: 400, description: AppError.BOOKING_NOT_FOUND })
+  @ApiResponse({ status: 400, description: AppError.NO_DATA_TO_UPDATE })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
+  @ApiParam({ name: "id", type: String, description: "Booking ID" })
+  edit(
+    @Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId,
+    @Body(EmptyBodyValidationPipe, new BodyKeysValidationPipe(EditBookingDto))
+    bookingDto: EditBookingDto
+  ) {
+    return this.adminService.editBooking(id, bookingDto);
+  }
+
   @Delete("bookings/:id")
   @ApiOperation({ summary: "Delete booking by ID [ ADMIN only ]" })
   @ApiResponse({ status: 200, type: Booking })
@@ -93,7 +113,7 @@ export class AdminController {
 
   @Patch("bookings/:optionType")
   @ApiOperation({ summary: "Add booking option [ ADMIN only ]" })
-  @ApiResponse({ status: 201, type: OptionDto })
+  @ApiResponse({ status: 200, type: OptionDto })
   @ApiResponse({ status: 400, description: "Value is not a valid option type" })
   @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
   @ApiResponse({ status: 403, description: AppError.FORBIDDEN })

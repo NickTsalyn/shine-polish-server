@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { BookingOption } from "src/bookings/booking-options.model";
 import { Booking } from "src/bookings/bookings.model";
 import { BookingsService } from "src/bookings/bookings.service";
-import { CreateBookingOptionDto, OptionDto, UpdatePricingDto } from "src/bookings/dto";
+import { CreateBookingOptionDto, EditBookingDto, OptionDto, UpdatePricingDto } from "src/bookings/dto";
 import { FilesService } from "src/files/files.service";
 import { ImagePair } from "src/files/image-pair.model";
 import { CreateEmployeeDto } from "src/users/dto";
@@ -26,11 +26,15 @@ export class AdminService {
   }
 
   async allBookings(): Promise<Booking[]> {
-    return await this.bookingsService.getAllBookings();
+    return await this.bookingsService.getAll();
+  }
+
+  async editBooking(id: mongoose.Types.ObjectId, dto: EditBookingDto): Promise<Booking> {
+    return await this.bookingsService.edit(id, dto);
   }
 
   async deleteBooking(id: mongoose.Types.ObjectId): Promise<Booking> {
-    return await this.bookingsService.deleteBookingByID(id);
+    return await this.bookingsService.deleteByID(id);
   }
 
   async createBookingOption(dto: CreateBookingOptionDto): Promise<BookingOption> {
