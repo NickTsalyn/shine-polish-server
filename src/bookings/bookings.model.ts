@@ -104,6 +104,10 @@ export class Booking {
   @Prop()
   discountCode: string;
 
+  @ApiProperty({ example: 333 })
+  @Prop()
+  totalPrice: number;
+
   @ApiProperty({ example: "5f9b5f5f9b5f9b5f9b5f9b5f", description: "MONGO ID" })
   @Prop({ type: mongoose.Schema.Types.ObjectId })
   owner: mongoose.Types.ObjectId;
