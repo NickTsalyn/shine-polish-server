@@ -10,7 +10,7 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
   @Get("/images")
-  @ApiOperation({ summary: "Get all image pairs [ ADMIN only ]" })
+  @ApiOperation({ summary: "Get all image pairs [ PUBLIC ]" })
   @ApiResponse({ status: 200, type: [ImagePair] })
   @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
   @ApiResponse({ status: 403, description: AppError.FORBIDDEN })

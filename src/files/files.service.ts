@@ -1,7 +1,10 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { promises as fs } from "fs";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
 import { ImagePair } from "./image-pair.model";
 import { AppError } from "src/common/constants";
 
@@ -10,8 +13,12 @@ export class FilesService {
   constructor(
     @InjectModel(ImagePair.name)
     private readonly imagePairModel: Model<ImagePair>,
-    @Inject("CLOUDINARY") private readonly cloudinary
+    @Inject("CLOUDINARY") private readonly cloudinary,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly configService: ConfigService
   ) { }
+
+  private static readonly IMAGE_PAIRS_KEY = "imagePairs";
   
   async uploadFile(file: Express.Multer.File){
     const fileCloud = await this.cloudinary.uploader.upload(file.path);
@@ -42,12 +49,23 @@ export class FilesService {
       afterImageURL: afterCloud.secure_url,
     });
 
+    await this.cacheManager.del(FilesService.IMAGE_PAIRS_KEY);
+    
     return await newImagePair.save();
   }
 
   async getImagePairs(): Promise<ImagePair[]> {
-    const imagePairs: ImagePair[] = await this.imagePairModel.find({}).select("-beforeImageID -afterImageID").exec();
-    if (!imagePairs) throw new NotFoundException(AppError.IMAGE_PAIR_NOT_FOUND);
+    const imagePairs = await this.cacheManager.get<ImagePair[]>(FilesService.IMAGE_PAIRS_KEY);
+
+    if (!imagePairs) { 
+      const imagePairs: ImagePair[] = await this.imagePairModel.find({}).select("-beforeImageID -afterImageID").exec();
+      
+      if (!imagePairs) throw new NotFoundException(AppError.IMAGE_PAIR_NOT_FOUND);
+
+      await this.cacheManager.set(FilesService.IMAGE_PAIRS_KEY, imagePairs, this.configService.get<number>("CACHE_TTL"));
+
+      return imagePairs;
+    };
 
     return imagePairs;
   }
@@ -58,6 +76,8 @@ export class FilesService {
 
     await this.cloudinary.uploader.destroy(imagePair.beforeImageID);
     await this.cloudinary.uploader.destroy(imagePair.afterImageID);
+
+    await this.cacheManager.del(FilesService.IMAGE_PAIRS_KEY);
 
     return await this.imagePairModel.findByIdAndDelete(id).exec();
   }

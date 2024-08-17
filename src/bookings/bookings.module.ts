@@ -5,11 +5,13 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { UsersModule } from "src/users/users.module";
 import { Booking, BookingSchema } from "./bookings.model";
 import { BookingOption, BookingOptionSchema } from "./booking-options.model";
+import { CacheModule } from "@nestjs/cache-manager";
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),
     MongooseModule.forFeature([{ name: BookingOption.name, schema: BookingOptionSchema }]),
+    CacheModule.register(),
     UsersModule,
   ],
   controllers: [BookingsController],

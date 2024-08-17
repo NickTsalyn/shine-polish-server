@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
+import { CacheModule } from "@nestjs/cache-manager";
 import * as cloudinary from "cloudinary";
 import { FilesService } from "./files.service";
 import { ImagePair, ImagePairSchema } from "./image-pair.model";
@@ -27,6 +28,7 @@ import { MulterModule } from "@nestjs/platform-express";
     MulterModule.register({
       dest: "./src/files/temp",
     }),
+    CacheModule.register(),
     ConfigModule,
   ],
   exports: [FilesService, "CLOUDINARY"],
