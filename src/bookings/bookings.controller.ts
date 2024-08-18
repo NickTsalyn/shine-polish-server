@@ -4,7 +4,7 @@ import { BookingsService } from "./bookings.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { ParseObjectIdPipe } from "src/common/pipes/object-ID.pipe";
 import { CreateBookingDto, CreateBookingOptionDto } from "./dto";
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Bookings")
 @Controller("bookings")
@@ -12,7 +12,7 @@ export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
   
   @Post()
-  @ApiOperation({ summary: "Create booking for Guests or Users" })
+  @ApiOperation({ summary: "Create booking for Guests or Users [ PUBLIC ]" })
   @ApiResponse({ status: 201, type: CreateBookingDto })
   @ApiResponse({ status: 400, description: "Bad request" })
   create(@Body() bookingDto: CreateBookingDto) {
@@ -30,7 +30,8 @@ export class BookingsController {
   @Get(":id")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth("accessToken")
-  @ApiOperation({ summary: "Get booking by ID for logged in user" })
+  @ApiOperation({ summary: "Get booking by ID for logged in user [ USER ]" })
+  @ApiParam({ name: "id", type: String, description: "Booking ID" })
   @ApiResponse({ status: 200, type: CreateBookingDto })
   @ApiResponse({ status: 400, description: "Value is not a valid ID" })
   @ApiResponse({ status: 401, description: "Unauthorized" })
