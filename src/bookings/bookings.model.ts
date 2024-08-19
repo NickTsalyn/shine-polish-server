@@ -57,8 +57,12 @@ export class Booking {
   area: string;
 
   @ApiProperty({ example: "2025-01-01" })
-  @Prop({ type: Date })
-  selectedDate: Date;
+  @Prop()
+  selectedDate: string;
+
+  @ApiProperty({ example: "2025-01-03" })
+  @Prop()
+  endDate?: string;
 
   @ApiProperty({ example: "10:00" })
   @Prop()

@@ -71,6 +71,11 @@ export class EditBookingDto {
   @IsOptional()
   selectedDate?: string = "";
 
+  @ApiProperty({ example: "2022-01-02" })
+  @IsString()
+  @IsOptional()
+  endDate?: string = "";
+
   @ApiProperty({ example: "16:00" })
   @IsString()
   @IsOptional()

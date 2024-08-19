@@ -125,7 +125,7 @@ export class AdminController {
     return this.adminService.addBookingOption(optionType, dto);
   }
 
-  @Put("bookings/pricing")
+  @Put("bookings/pricing/edit")
   @ApiOperation({ summary: "Update booking pricing [ ADMIN only ]" })
   @ApiResponse({ status: 200, type: UpdatePricingDto })
   @ApiResponse({ status: 400, description: "Key is not a valid pricing field" })
