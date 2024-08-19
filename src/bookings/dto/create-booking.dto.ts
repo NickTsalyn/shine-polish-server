@@ -48,6 +48,12 @@ export class CreateBookingDto {
   // @IsNotEmpty()
   selectedDate: string;
 
+  @ApiProperty({ example: "2022-01-01" })
+  @IsString()
+  @IsOptional()
+  // @IsNotEmpty()
+  endDate?: string;
+
   @ApiProperty({ example: "16:00" })
   @IsString()
   // @IsNotEmpty()

@@ -112,6 +112,9 @@ export class BookingsService {
   }
 
   async updateBookingPricing(dto: UpdatePricingDto): Promise<BookingOption> {
+    const pricingKeys = Object.keys(dto);
+    console.log(pricingKeys);
+    
     for (const key in dto) {
       if (!Object.values(Pricing).includes(key as Pricing)) throw new BadRequestException(`${key} is not a valid pricing field`);
     }
