@@ -6,7 +6,7 @@ export const swaggerConfig = new DocumentBuilder()
     "API documentation for [Shine&Polish](https://github.com/NickTsalyn/shine-polish) application. [Backend github repository](https://github.com/NickTsalyn/shine-polish-server)"
   )
   .addServer("https://shine-polish-server.onrender.com")
-  .setVersion("1.1.1")
+  .setVersion("1.1.2")
   .addBearerAuth(
     {
       type: "http",

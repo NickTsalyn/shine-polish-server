@@ -44,7 +44,7 @@ import { User } from "src/users/users.model";
 import { AppError } from "src/common/constants";
 import { Booking } from "src/bookings/bookings.model";
 import { ImagePair } from "src/files/image-pair.model";
-import { createEmployeeApiBodySchema, CreateEmployeeDto } from "src/users/dto";
+import { createEmployeeApiBodySchema, CreateEmployeeDto, editEmployeeApiBodySchema, EditEmployeeDto } from "src/users/dto";
 import { Employee } from "src/users/employees.model";
 import { createImagePairApiBody } from "src/files/dto";
 
@@ -225,6 +225,25 @@ export class AdminController {
   @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
   getAllEmployees() {
     return this.adminService.getAllEmployees();
+  }
+
+  @Patch("employees/:id")
+  @ApiOperation({ summary: "Edit employee [ ADMIN only ]" })
+  @ApiParam({ name: "id", type: String, description: "Employee ID" })
+  @ApiConsumes("multipart/form-data")
+  @ApiBody(editEmployeeApiBodySchema)
+  @ApiResponse({ status: 200, type: Employee })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
+  @ApiResponse({ status: 404, description: AppError.EMPLOYEE_NOT_FOUND })
+  @ApiResponse({ status: 409, description: AppError.FIELD_EXISTS })
+  @UseInterceptors(FileInterceptor("avatar"))
+  editEmployee(
+    @Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId,
+    @Body(EmptyBodyValidationPipe, new BodyKeysValidationPipe(EditEmployeeDto)) dto: EditEmployeeDto,
+    @UploadedFile() avatar: Express.Multer.File
+  ) {
+    return this.adminService.editEmployee(id, dto, avatar);
   }
 
   @Delete("employees/:id")

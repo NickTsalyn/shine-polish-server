@@ -6,7 +6,7 @@ import { BookingsService } from "src/bookings/bookings.service";
 import { CreateBookingOptionDto, EditBookingDto, OptionDto, UpdatePricingDto } from "src/bookings/dto";
 import { FilesService } from "src/files/files.service";
 import { ImagePair } from "src/files/image-pair.model";
-import { CreateEmployeeDto } from "src/users/dto";
+import { CreateEmployeeDto, EditEmployeeDto } from "src/users/dto";
 import { Employee } from "src/users/employees.model";
 import { EmployeesService } from "src/users/employees.service";
 import { User } from "src/users/users.model";
@@ -71,6 +71,10 @@ export class AdminService {
 
   async getAllEmployees(): Promise<Employee[]> {
     return await this.employeesService.getAll();
+  }
+
+  async editEmployee(id: mongoose.Types.ObjectId, dto: EditEmployeeDto, avatar: Express.Multer.File): Promise<Employee> {
+    return await this.employeesService.edit(id, dto, avatar);
   }
 
   async deleteEmployee(id: mongoose.Types.ObjectId): Promise<Employee> {
