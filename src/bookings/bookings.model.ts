@@ -68,6 +68,10 @@ export class Booking {
   @Prop()
   time: string;
 
+  @ApiProperty({ example: "12:00" })
+  @Prop()
+  endTime?: string;
+
   @ApiProperty({ example: 1 })
   @Prop()
   bedroom: number;

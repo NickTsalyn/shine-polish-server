@@ -80,6 +80,11 @@ export class EditBookingDto {
   @IsString()
   @IsOptional()
   time?: string = "";
+
+  @ApiProperty({ example: "18:00" })
+  @IsString()
+  @IsOptional()
+  endTime?: string = "";
   
   @ApiProperty({ example: "2" })
   @IsNumber()
