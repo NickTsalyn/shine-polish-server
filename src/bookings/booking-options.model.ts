@@ -26,6 +26,9 @@ export class BookingOption {
 
   @Prop({ required: true })
   bathPrice: number;
+
+  @Prop({ default: [], required: true })
+  promoCodes: { name: string; discount: number }[];
 }
 
 export const BookingOptionSchema = SchemaFactory.createForClass(BookingOption);

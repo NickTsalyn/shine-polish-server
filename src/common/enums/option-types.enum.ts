@@ -3,4 +3,5 @@ export enum OptionTypes {
   DISCOUNT_OPTIONS = "discountOptions",
   EXTRAS_OPTIONS = "extrasOptions",
   SERVICE_OPTIONS = "serviceOptions",
+  PROMO_CODES = "promoCodes",
 }
