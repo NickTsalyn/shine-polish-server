@@ -37,14 +37,26 @@ import {
   CreateBookingOptionDto,
   EditBookingDto,
   OptionDto,
+  PromoCodeDto,
+  PromoCodeResDto,
   UpdatePricingDto,
 } from "src/bookings/dto";
-import { BodyKeysValidationPipe, EmptyBodyValidationPipe, OptionTypeValidationPipe, ParseObjectIdPipe } from "src/common/pipes";
+import {
+  BodyKeysValidationPipe,
+  EmptyBodyValidationPipe,
+  OptionTypeValidationPipe,
+  ParseObjectIdPipe,
+} from "src/common/pipes";
 import { User } from "src/users/users.model";
 import { AppError } from "src/common/constants";
 import { Booking } from "src/bookings/bookings.model";
 import { ImagePair } from "src/files/image-pair.model";
-import { createEmployeeApiBodySchema, CreateEmployeeDto, editEmployeeApiBodySchema, EditEmployeeDto } from "src/users/dto";
+import {
+  createEmployeeApiBodySchema,
+  CreateEmployeeDto,
+  editEmployeeApiBodySchema,
+  EditEmployeeDto,
+} from "src/users/dto";
 import { Employee } from "src/users/employees.model";
 import { createImagePairApiBody } from "src/files/dto";
 
@@ -123,6 +135,19 @@ export class AdminController {
     @Body() dto: OptionDto
   ) {
     return this.adminService.addBookingOption(optionType, dto);
+  }
+
+  @Patch("bookings/promo/code")
+  @ApiOperation({ summary: "Add booking promo code [ ADMIN only ]" })
+  @ApiResponse({ status: 200, type: PromoCodeResDto })
+  @ApiResponse({ status: 400, description: "Value is not a valid option type" })
+  @ApiResponse({ status: 401, description: AppError.UNAUTHORIZED })
+  @ApiResponse({ status: 403, description: AppError.FORBIDDEN })
+  @ApiResponse({ status: 404, description: AppError.OPTIONS_NOT_FOUND })
+  addPromoCode(
+    @Body(EmptyBodyValidationPipe) promoCodeDto: PromoCodeDto
+  ) {
+    return this.adminService.addPromoCode(promoCodeDto);
   }
 
   @Put("bookings/pricing/edit")
@@ -240,7 +265,7 @@ export class AdminController {
   @UseInterceptors(FileInterceptor("avatar"))
   editEmployee(
     @Param("id", ParseObjectIdPipe) id: mongoose.Types.ObjectId,
-    @Body(EmptyBodyValidationPipe, new BodyKeysValidationPipe(EditEmployeeDto)) dto: EditEmployeeDto,
+    @Body(new BodyKeysValidationPipe(EditEmployeeDto)) dto: EditEmployeeDto,
     @UploadedFile() avatar: Express.Multer.File
   ) {
     return this.adminService.editEmployee(id, dto, avatar);

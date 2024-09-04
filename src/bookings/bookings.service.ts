@@ -9,13 +9,16 @@ import { InjectModel } from "@nestjs/mongoose";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 import mongoose, { Model } from "mongoose";
+import { v4 } from "uuid";
+import { add } from "date-fns";
 import { Booking } from "./bookings.model";
 import { UsersService } from "src/users/users.service";
 import { User } from "src/users/users.model";
 import { BookingOption } from "./booking-options.model";
-import { CreateBookingDto, CreateBookingOptionDto, EditBookingDto, OptionDto, UpdatePricingDto } from "./dto";
+import { CreateBookingDto, CreateBookingOptionDto, EditBookingDto, OptionDto, PromoCodeDto, UpdatePricingDto } from "./dto";
 import { AppError } from "src/common/constants";
 import { Pricing } from "src/common/enums";
+import exp from "constants";
 
 @Injectable()
 export class BookingsService {
@@ -28,6 +31,7 @@ export class BookingsService {
   ) { }
   
   private static readonly BOOKING_OPTIONS_KEY = "bookingOptions";
+  private static readonly PROMO_CODES_KEY = "promoCodes";
 
   private async validateBooking(dto: CreateBookingDto): Promise<Booking> {
     const isExistUser: User = await this.userService.findOneByEmail(dto.email);
@@ -111,9 +115,25 @@ export class BookingsService {
     return options;
   }
 
+  async addPromoCode(dto: PromoCodeDto): Promise<BookingOption> {
+    const updateDto = {
+      name: dto.name,
+      value: `${dto.name.toUpperCase()}-${v4().split("-")[0].toUpperCase()}`,
+      discount: dto.discount,
+      exp: add(new Date(), { months: 1 }),
+    };
+    const update = { $push: { [BookingsService.PROMO_CODES_KEY]: updateDto } };
+
+    const options = await this.bookingOptionModel.findOneAndUpdate({}, update, { new: true });
+    if (!options) throw new NotFoundException(AppError.OPTIONS_NOT_FOUND);
+
+    await this.cacheManager.del(BookingsService.BOOKING_OPTIONS_KEY);
+
+    return options;
+  }
+
   async updateBookingPricing(dto: UpdatePricingDto): Promise<BookingOption> {
     const pricingKeys = Object.keys(dto);
-    console.log(pricingKeys);
     
     for (const key in dto) {
       if (!Object.values(Pricing).includes(key as Pricing)) throw new BadRequestException(`${key} is not a valid pricing field`);
